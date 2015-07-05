@@ -2,7 +2,7 @@
 #import <objc/runtime.h>
 
 #include "osx_notifier.h"
-#include "values.h"
+#include "values"
 
 
 static NSString *fake_bundle_identifier;
