@@ -56,8 +56,8 @@ BOOL install_bundle_hook()
 
 -(NSImage*)load_image
 {
-	NSData *pngData = [NSData dataWithBytesNoCopy:gar_photo
-										   length:gar_photo_len
+	NSData *pngData = [NSData dataWithBytesNoCopy:robot_jpg
+										   length:robot_jpg_len
 									 freeWhenDone:NO];
 	return [[NSImage alloc] initWithData:pngData];
 }
@@ -93,8 +93,9 @@ BOOL install_bundle_hook()
        didActivateNotification:(NSUserNotification *)notification
 {
 	NSLog(@"Something clicked?");
-	[[NSWorkspace sharedWorkspace]
-		openURL:[NSURL URLWithString:@"http://google.com"]];
+	// [[NSWorkspace sharedWorkspace]
+	// 	openURL:[NSURL URLWithString:@"http://google.com"]];
+	exit(1);
 }
 
 @end
