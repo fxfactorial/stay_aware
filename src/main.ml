@@ -3,8 +3,18 @@ open Cmdliner
 
 module R = Rresult
 
-let prog raw_string =
-  return (Osx_notify.notify_start raw_string)
+let rec prog raw_string =
+  match Lwt_unix.fork () with
+  | 0 -> (* Just for the child code *)
+     return (Osx_notify.notify_start raw_string)
+  | pid -> Lwt_unix.waitpid [] pid >>= function
+           | (_, Unix.WEXITED status) when status = -1 ->
+              Lwt_io.printl "Unable to setup bundle hook"
+           | (_, Unix.WEXITED status) when status = 0 ->
+              Lwt_io.printl "Application ended"
+           | (_, Unix.WEXITED status) when status = 1 ->
+              Lwt_io.printl "User clicked on notification"
+           | (_, _) -> Lwt_io.printl "Something fuckedup"
 
 let first_arg =
   Arg.(required & pos 0 (some string) None & info [])

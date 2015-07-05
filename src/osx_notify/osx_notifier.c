@@ -4,7 +4,6 @@
 #include "osx_notifier.h"
 #include "values"
 
-
 static NSString *fake_bundle_identifier;
 
 @implementation NSBundle(swizzle)
@@ -62,32 +61,32 @@ BOOL install_bundle_hook()
 	return [[NSImage alloc] initWithData:pngData];
 }
 
-
 -(void)do_notification : (NSString*)message
 {
 	NSUserNotification *notification = [[NSUserNotification alloc] init];
-	// [notification addObserver:self
-	// 			   forKeyPath:@"presented"
-	// 				  options:0
-	// 				  context:NULL];
-	[notification setTitle:message];
+	[notification setTitle:@"Your Title!"];
 	[notification setContentImage:[self load_image]];
-	[notification setInformativeText:@"I love PandaBar!"];
+	[notification setInformativeText:message];
 	[notification setSoundName:NSUserNotificationDefaultSoundName];
 	NSUserNotificationCenter *center =
 		[NSUserNotificationCenter defaultUserNotificationCenter];
+	// [notification addObserver:self
+	// 		 forKeyPath:NSStringFromSelector(@selector(presented))
+	// 			options:NSKeyValueObservingOptionNew |
+	// 		            NSKeyValueObservingOptionOld
+	// 			context:NULL];
 	center.delegate = self;
 	[center deliverNotification:notification];
 	[[NSSound soundNamed:@"Hero"] play];
 }
 
-// -(void)observeValueForKeyPath:(NSString *)keyPath
-// 					 ofObject:(id)object
-// 					   change:(NSDictionary *)change
-// 					  context:(void *)context
-// {
-// 	NSLog(@"Value changed!");
-// }
+- (void)userNotificationCenter:(NSUserNotificationCenter *)center
+        didDeliverNotification:(NSUserNotification *)notification
+{
+	NSLog(@"Delivered");
+	sleep(3);
+	exit(EXIT_CODE_SUCCESS);
+}
 
 - (void)userNotificationCenter:(NSUserNotificationCenter *)center
        didActivateNotification:(NSUserNotification *)notification
@@ -102,24 +101,18 @@ BOOL install_bundle_hook()
 
 void notify_start(char *message)
 {
-	// if (install_bundle_hook()) {
-	// 	OCamlNotifier *carrier = [OCamlNotifier new];
-	// 	NSString *wrapped = [NSString stringWithCString:message
-	// 										   encoding:NSUTF8StringEncoding];
-	// 	[carrier do_notification:wrapped];
-	// }
-	// else
-	// 	NSLog(@"Error, wasn't able to do the bundle hook");
-	install_bundle_hook();
-	NSApplication *app = [NSApplication sharedApplication];
-	// So Weird that if you don't have a handle on an object, then you get
-	// this warning:  assigning retained object to unsafe property;
-	// object will be released after assignment [-Warc-unsafe-retained-assign]
-	// and it will seg fault
-	NSString *wrapped = [NSString stringWithCString:message
-										   encoding:NSUTF8StringEncoding];
-	OCamlNotifier *app_delegate = [[OCamlNotifier alloc]
-									  init_with_message:wrapped];
-	app.delegate = app_delegate;
-	[app run];
+	if (install_bundle_hook()) {
+		NSApplication *app = [NSApplication sharedApplication];
+		// So Weird that if you don't have a handle on an object, then you get
+		// this warning:  assigning retained object to unsafe property;
+		// object will be released after assignment [-Warc-unsafe-retained-assign]
+		// and it will seg fault
+		NSString *wrapped = [NSString stringWithCString:message
+											   encoding:NSUTF8StringEncoding];
+		OCamlNotifier *app_delegate = [[OCamlNotifier alloc]
+										  init_with_message:wrapped];
+		app.delegate = app_delegate;
+		[app run];
+	}
+	exit(EXIT_CODE_BUNDLE_HOOK);
 }

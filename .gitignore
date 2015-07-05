@@ -6,3 +6,4 @@
 *.cmx
 *.o
 stay_aware
+src/osx_notify/spare_code.m
