@@ -17,9 +17,18 @@ all:objective_c
 	src/osx_notify/osx_notify.ml src/main.ml -o $(EXEC)
 
 objective_c:
-	clang -fobjc-arc -c src/osx_notify/osx_notifier.m
+	clang -fobjc-arc -c -g src/osx_notify/osx_notifier.m -o \
+	src/osx_notify/osx_notifier.o
 
 .PHONY:clean
 
 clean:
 	rm -rf *.o *.out *.cmt *.cmo *.cma *.cmx
+	rm -rf src/*.out src/*.o src/*.cmt src/*.cmi \
+	src/*.cmo src/*.cmo src/*.cma src/*.cmx
+	rm -rf src/osx_notify/*.out src/osx_notify/*.o \
+	src/osx_notify/*.cmt src/osx_notify/*.cmi \
+	src/osx_notify/*.cmo src/osx_notify/*.cmo \
+	src/osx_notify/*.cma src/osx_notify/*.cmx
+	rm -f $(EXEC)
+
