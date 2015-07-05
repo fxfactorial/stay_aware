@@ -1,0 +1,8 @@
+*.cma
+*.cmo
+*.cma
+*.cmi
+*.cmt
+*.cmx
+*.o
+stay_aware
