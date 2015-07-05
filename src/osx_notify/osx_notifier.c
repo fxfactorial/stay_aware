@@ -2,7 +2,7 @@
 #import <objc/runtime.h>
 
 #include "osx_notifier.h"
-#include "values"
+#include "values.h"
 
 static NSString *fake_bundle_identifier;
 
@@ -48,16 +48,29 @@ BOOL install_bundle_hook()
 	}
 	return self;
 }
+
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
 	[self do_notification:_the_message];
 }
 
--(NSImage*)load_image
+-(NSImage*)load_image:(ImageChoice)image_choice
 {
-	NSData *pngData = [NSData dataWithBytesNoCopy:robot_jpg
-										   length:robot_jpg_len
-									 freeWhenDone:NO];
+	NSData *pngData;
+	switch(image_choice) {
+	case Machine:
+		NSLog(@"called machine");
+		pngData = [NSData dataWithBytesNoCopy:machine_png
+									   length:machine_png_len
+								 freeWhenDone:NO];
+		break;
+	case Internet:
+		NSLog(@"Called internet");
+		pngData = [NSData dataWithBytesNoCopy:internet_png
+									   length:internet_png_len
+								 freeWhenDone:NO];
+		break;
+	}
 	return [[NSImage alloc] initWithData:pngData];
 }
 
@@ -65,16 +78,13 @@ BOOL install_bundle_hook()
 {
 	NSUserNotification *notification = [[NSUserNotification alloc] init];
 	[notification setTitle:@"Your Title!"];
-	[notification setContentImage:[self load_image]];
+	[notification setContentImage:[self load_image:Machine]];
 	[notification setInformativeText:message];
 	[notification setSoundName:NSUserNotificationDefaultSoundName];
 	NSUserNotificationCenter *center =
 		[NSUserNotificationCenter defaultUserNotificationCenter];
-	// [notification addObserver:self
-	// 		 forKeyPath:NSStringFromSelector(@selector(presented))
-	// 			options:NSKeyValueObservingOptionNew |
-	// 		            NSKeyValueObservingOptionOld
-	// 			context:NULL];
+	[notification setValue:[self load_image:Internet]
+					forKey:@"_identityImage"];
 	center.delegate = self;
 	[center deliverNotification:notification];
 	[[NSSound soundNamed:@"Hero"] play];
@@ -92,8 +102,6 @@ BOOL install_bundle_hook()
        didActivateNotification:(NSUserNotification *)notification
 {
 	NSLog(@"Something clicked?");
-	// [[NSWorkspace sharedWorkspace]
-	// 	openURL:[NSURL URLWithString:@"http://google.com"]];
 	exit(1);
 }
 
