@@ -1,8 +1,5 @@
 B src/osx_notify/
 S src/osx_notify/
 
-PKG lwt.syntax
-PKG dns.lwt
-EXT lwt
 PKG cmdliner
 PKG rresult

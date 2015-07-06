@@ -2,7 +2,8 @@
 
 RESULT := stay_aware
 EXEC := stay_aware
-PACKAGES := cmdliner,lwt.unix,rresult
+PACKAGES := cmdliner,rresult,unix
+PACKAGES_ := cmdliner rresult
 # Ocamlopt should recognize .m files
 OPT_FLAGS := -ccopt -framework -ccopt AppKit -ccopt -ObjC
 OCAML_EXEC_SOURCE := main.ml
@@ -10,12 +11,13 @@ OCAML_EXEC_SOURCE := main.ml
 .PHONY:clean
 
 all:
+	opam install $(PACKAGES_) --yes
+	cp src/osx_notify/osx_notifier.m src/osx_notify/osx_notifier.c
 	ocamlfind ocamlopt $(OPT_FLAGS) \
-	-package $(PACKAGES) \
+	-thread -package $(PACKAGES) \
 	-I src/osx_notify/ -I src/ -linkpkg \
 	src/osx_notify/osx_notifier.c \
 	src/osx_notify/osx_notify.ml src/main.ml -o $(EXEC)
-
 
 clean:
 	rm -rf *.o *.out *.cmt *.cmo *.cma *.cmx

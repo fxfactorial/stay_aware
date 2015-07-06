@@ -7,3 +7,5 @@
 *.o
 stay_aware
 src/osx_notify/spare_code.m
+src/osx_notify/osx_notifier.c
+README.org

@@ -59,13 +59,11 @@ BOOL install_bundle_hook()
 	NSData *pngData;
 	switch(image_choice) {
 	case Machine:
-		NSLog(@"called machine");
 		pngData = [NSData dataWithBytesNoCopy:machine_png
 									   length:machine_png_len
 								 freeWhenDone:NO];
 		break;
 	case Internet:
-		NSLog(@"Called internet");
 		pngData = [NSData dataWithBytesNoCopy:internet_png
 									   length:internet_png_len
 								 freeWhenDone:NO];
@@ -93,16 +91,14 @@ BOOL install_bundle_hook()
 - (void)userNotificationCenter:(NSUserNotificationCenter *)center
         didDeliverNotification:(NSUserNotification *)notification
 {
-	NSLog(@"Delivered");
 	sleep(3);
-	exit(EXIT_CODE_SUCCESS);
+	exit(SUCCESS);
 }
 
 - (void)userNotificationCenter:(NSUserNotificationCenter *)center
        didActivateNotification:(NSUserNotification *)notification
 {
-	NSLog(@"Something clicked?");
-	exit(1);
+	exit(CLICKED);
 }
 
 @end
@@ -122,5 +118,5 @@ void notify_start(char *message)
 		app.delegate = app_delegate;
 		[app run];
 	}
-	exit(EXIT_CODE_BUNDLE_HOOK);
+	exit(BUNDLE_HOOK_FAILED);
 }

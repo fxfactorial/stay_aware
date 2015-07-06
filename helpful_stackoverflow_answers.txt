@@ -1,0 +1,5 @@
+The following stackoverflow answers were useful in this app
+
+1)http://stackoverflow.com/questions/24923979/nsusernotification-customisable-app-icon
+2)http://stackoverflow.com/questions/21110714/mac-os-x-nsusernotificationcenter-notification-get-dismiss-event-callback
+3) 

@@ -8,9 +8,10 @@ typedef NS_ENUM(NSInteger, ImageChoice) {
     Internet
 };
 
-typedef NS_ENUM(NSInteger, ExitCode) {
-	EXIT_CODE_BUNDLE_HOOK = -1,
-	EXIT_CODE_SUCCESS,
+typedef NS_ENUM(NSInteger, EXIT_CODE) {
+	BUNDLE_HOOK_FAILED = -1,
+		SUCCESS,
+		CLICKED
 };
 
 unsigned char internet_png[] = {
