@@ -59,7 +59,7 @@ let program raw_string =
                                     0o600
          in
          let rec forever () =
-           Unix.select [source] [] [] 0.50 |>
+           Unix.select [source] [] [] 2.0 |>
              function
              | read_me, _, _ when List.length read_me > 0->
                 let read_me_fd = List.hd read_me in
@@ -82,7 +82,9 @@ let program raw_string =
                              | (_, _) -> prerr_endline "Something fuckedup"))
                 end;
                 forever ()
-             | _ -> forever ()
+             | _ ->
+                (* Put here the code to pull down the addresses *)
+                forever ()
          in
          forever ()
        end
